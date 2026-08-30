@@ -52,6 +52,7 @@ const DEFERRED_MODEL_LIST_PROVIDERS = new Set([
   "novita",
   "ollama",
   "openrouter",
+  "orcarouter",
   "ovms",
   "siliconflow",
   "vllm",
@@ -203,13 +204,15 @@ export function ModelIdPicker({
   const providerConfigured = settingsProviderConfigured(settings, effectiveProvider);
   const providerRequiresConfiguration =
     !hasStaticModels && hasConcreteProvider && !providerConfigured;
-  const providerHasBuiltinModels = providerRow?.model_catalog === "builtin";
+  const providerHasManagedModels = ["builtin", "hybrid"].includes(
+    providerRow?.model_catalog ?? "",
+  );
   const providerUsesManualModelIds =
     !hasStaticModels &&
     hasConcreteProvider &&
     providerConfigured &&
     providerRow?.auth_type === "oauth" &&
-    !providerHasBuiltinModels;
+    !providerHasManagedModels;
   const canFetchModels =
     !hasStaticModels &&
     hasConcreteProvider && providerConfigured && !providerUsesManualModelIds;
@@ -577,6 +580,7 @@ export function optionRowsWithCurrent(
 export const PROVIDER_ICONS: Record<string, LucideIcon> = {
   custom: Hexagon,
   openrouter: Sparkles,
+  orcarouter: Sparkles,
   skywork: Sparkles,
   aihubmix: Triangle,
   anthropic: Brain,
